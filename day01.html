@@ -428,16 +428,16 @@
 
       <div class="control-group">
         <div class="field">
-          <label for="voiceSelect">Voice</label>
-          <select id="voiceSelect"></select>
+          <label>Audio</label>
+          <p class="hint">v0.2 使用固定 M4A 音频，手机和电脑播放同一份声音。</p>
         </div>
         <div class="field">
-          <label for="slowRate">慢速语速 <span id="slowRateLabel">0.84</span></label>
-          <input id="slowRate" type="range" min="0.65" max="0.95" value="0.84" step="0.01">
+          <label>慢速</label>
+          <p class="hint">约 112 WPM，适合精听。</p>
         </div>
         <div class="field">
-          <label for="normalRate">正常语速 <span id="normalRateLabel">0.95</span></label>
-          <input id="normalRate" type="range" min="0.75" max="1.15" value="0.95" step="0.01">
+          <label>正常</label>
+          <p class="hint">约 150 WPM，适合跟读。</p>
         </div>
       </div>
 
@@ -446,7 +446,7 @@
       </div>
       <p class="hint"><span id="doneCount">0</span> / <span id="totalCount">0</span> 句已标记完成</p>
 
-      <div class="status" id="status">选择一句，点击慢速或正常播放。手机上如果声音变形，优先选择英语语音，并把慢速调到 0.82 以上。</div>
+      <div class="status" id="status">选择一句，点击慢速或正常播放。当前版本播放固定 M4A 音频，不再使用手机浏览器朗读。</div>
     </aside>
 
     <main>
@@ -693,21 +693,16 @@
     };
 
     const state = {
-      voices: [],
       activeIndex: null,
       repeatTimer: null,
       completed: new Set(JSON.parse(localStorage.getItem("english-os-day1-completed") || "[]")),
-      articleRepeat: false
+      articleRepeat: false,
+      audio: new Audio()
     };
 
     const articleText = document.getElementById("articleText");
     const sentenceList = document.getElementById("sentenceList");
     const vocabGrid = document.getElementById("vocabGrid");
-    const voiceSelect = document.getElementById("voiceSelect");
-    const slowRate = document.getElementById("slowRate");
-    const normalRate = document.getElementById("normalRate");
-    const slowRateLabel = document.getElementById("slowRateLabel");
-    const normalRateLabel = document.getElementById("normalRateLabel");
     const statusEl = document.getElementById("status");
     const progressBar = document.getElementById("progressBar");
     const doneCount = document.getElementById("doneCount");
@@ -717,40 +712,29 @@
       statusEl.textContent = message;
     }
 
-    function getSelectedVoice() {
-      const selected = voiceSelect.value;
-      return state.voices.find((voice) => voice.name === selected) || null;
-    }
-
-    function speak(text, rate, onEnd) {
-      if (!("speechSynthesis" in window)) {
-        setStatus("这个浏览器不支持内置朗读。建议用 Chrome、Edge 或 Safari 打开。");
-        return;
-      }
-
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      const voice = getSelectedVoice();
-      if (voice) utterance.voice = voice;
-      utterance.lang = "en-US";
-      utterance.rate = Number(rate);
-      utterance.pitch = 1;
-      utterance.onstart = () => setStatus("正在朗读...");
-      utterance.onend = () => {
-        setStatus("朗读结束。");
-        if (onEnd) onEnd();
-      };
-      utterance.onerror = () => setStatus("朗读被中断或浏览器语音暂不可用。");
-      window.speechSynthesis.speak(utterance);
+    function playAudio(src, label, repeat = false) {
+      clearTimeout(state.repeatTimer);
+      state.articleRepeat = false;
+      state.audio.pause();
+      state.audio.currentTime = 0;
+      state.audio = new Audio(src);
+      state.audio.loop = repeat;
+      state.audio.onplay = () => setStatus(`${label} 播放中...`);
+      state.audio.onended = () => setStatus(`${label} 播放结束。`);
+      state.audio.onerror = () => setStatus(`无法播放 ${label}。请确认 audio/day01 音频文件已上传。`);
+      state.audio.play().catch(() => {
+        setStatus("浏览器阻止了自动播放，请再次点击播放按钮。");
+      });
     }
 
     function stopSpeech() {
       state.articleRepeat = false;
       clearTimeout(state.repeatTimer);
-      window.speechSynthesis.cancel();
+      state.audio.pause();
+      state.audio.currentTime = 0;
       document.querySelectorAll(".sentence-card").forEach((card) => card.classList.remove("active"));
       document.querySelectorAll(".vocab-card").forEach((card) => card.classList.remove("active"));
-      setStatus("已停止朗读。");
+      setStatus("已停止播放。");
     }
 
     function renderArticle() {
@@ -834,42 +818,22 @@
     }
 
     function playSentence(index, speed, repeat = false) {
-      clearTimeout(state.repeatTimer);
-      state.articleRepeat = false;
       setActive(index);
-      const rate = speed === "slow" ? slowRate.value : normalRate.value;
       const label = speed === "slow" ? "慢速" : "正常";
-      setStatus(`Sentence ${index + 1} ${label}朗读中...`);
-      speak(lesson.sentences[index].text, rate, () => {
-        if (repeat) {
-          state.repeatTimer = setTimeout(() => playSentence(index, speed, true), 650);
-        }
-      });
+      const id = String(index + 1).padStart(2, "0");
+      playAudio(`audio/day01/s${id}-${speed}.m4a`, `Sentence ${index + 1} ${label}`, repeat);
     }
 
     function playVocabulary(index, speed, repeat = false) {
-      clearTimeout(state.repeatTimer);
-      state.articleRepeat = false;
       setActiveVocab(index);
-      const rate = speed === "slow" ? slowRate.value : normalRate.value;
       const label = speed === "slow" ? "慢速" : "正常";
-      setStatus(`${lesson.vocabulary[index].word} ${label}朗读中...`);
-      speak(lesson.vocabulary[index].word, rate, () => {
-        if (repeat) {
-          state.repeatTimer = setTimeout(() => playVocabulary(index, speed, true), 550);
-        }
-      });
+      const id = String(index + 1).padStart(2, "0");
+      playAudio(`audio/day01/v${id}-${speed}.m4a`, `${lesson.vocabulary[index].word} ${label}`, repeat);
     }
 
-    function playArticle(rate, repeat = false) {
-      clearTimeout(state.repeatTimer);
-      state.articleRepeat = repeat;
-      const text = lesson.paragraphs.join("\n\n");
-      speak(text, rate, () => {
-        if (state.articleRepeat) {
-          state.repeatTimer = setTimeout(() => playArticle(rate, true), 900);
-        }
-      });
+    function playArticle(speed, repeat = false) {
+      const label = speed === "slow" ? "全文慢速" : "全文正常";
+      playAudio(`audio/day01/full-${speed}.m4a`, label, repeat);
     }
 
     function updateProgress() {
@@ -881,50 +845,12 @@
       localStorage.setItem("english-os-day1-completed", JSON.stringify([...state.completed]));
     }
 
-    function populateVoices() {
-      if (!("speechSynthesis" in window)) return;
-      state.voices = window.speechSynthesis.getVoices()
-        .filter((voice) => voice.lang.toLowerCase().startsWith("en"))
-        .sort((a, b) => {
-          const aUs = a.lang.toLowerCase().includes("us") ? 0 : 1;
-          const bUs = b.lang.toLowerCase().includes("us") ? 0 : 1;
-          return aUs - bUs || a.name.localeCompare(b.name);
-        });
-
-      voiceSelect.innerHTML = "";
-      if (state.voices.length === 0) {
-        voiceSelect.innerHTML = `<option value="">浏览器默认英语语音</option>`;
-        return;
-      }
-
-      state.voices.forEach((voice) => {
-        const option = document.createElement("option");
-        option.value = voice.name;
-        option.textContent = `${voice.name} (${voice.lang})`;
-        voiceSelect.appendChild(option);
-      });
-    }
-
     renderArticle();
     renderSentences();
     renderVocabulary();
-    populateVoices();
-
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.onvoiceschanged = populateVoices;
-    }
-
-    slowRate.addEventListener("input", () => {
-      slowRateLabel.textContent = Number(slowRate.value).toFixed(2);
-    });
-
-    normalRate.addEventListener("input", () => {
-      normalRateLabel.textContent = Number(normalRate.value).toFixed(2);
-    });
-
-    document.getElementById("playArticle").addEventListener("click", () => playArticle(normalRate.value));
-    document.getElementById("playArticleSlow").addEventListener("click", () => playArticle(slowRate.value));
-    document.getElementById("repeatArticle").addEventListener("click", () => playArticle(normalRate.value, true));
+    document.getElementById("playArticle").addEventListener("click", () => playArticle("normal"));
+    document.getElementById("playArticleSlow").addEventListener("click", () => playArticle("slow"));
+    document.getElementById("repeatArticle").addEventListener("click", () => playArticle("normal", true));
     document.getElementById("stopAll").addEventListener("click", stopSpeech);
 
     sentenceList.addEventListener("click", (event) => {
