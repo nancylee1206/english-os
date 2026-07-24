@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>English OS v0.1</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #1c2430;
+      --muted: #647083;
+      --line: #d9e0ea;
+      --accent: #1769e0;
+      --accent-strong: #0f4fb3;
+      --good: #178a57;
+      --soft: #eaf2ff;
+      --shadow: 0 14px 36px rgba(28, 36, 48, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .shell {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 48px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 22px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metric,
+    .panel,
+    .day-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .metric {
+      padding: 16px;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 750;
+    }
+
+    .panel {
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .day-card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .day-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .day-number {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #edf9f3;
+      color: #0f6a41;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge.locked {
+      background: #f0f3f8;
+      color: #647083;
+    }
+
+    .day-title {
+      font-size: 19px;
+      font-weight: 760;
+    }
+
+    .day-meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+      background: #e3e9f2;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--good);
+      transition: width 180ms ease;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: #aebbd0;
+      background: #f9fbff;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-strong);
+    }
+
+    .locked-card {
+      opacity: 0.72;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 24px, 1120px);
+        padding-top: 24px;
+      }
+
+      header,
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 29px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <h1>English OS</h1>
+        <p class="subtitle">90 天英语精听训练系统。v0.1 先交付首页、Day01、逐句播放、Shadowing 练习和本地进度保存。</p>
+      </div>
+      <a class="btn primary" href="day01.html">继续 Day01</a>
+    </header>
+
+    <section class="summary" aria-label="学习概览">
+      <div class="metric">
+        <p class="metric-label">当前版本</p>
+        <p class="metric-value">v0.1</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">已开放课程</p>
+        <p class="metric-value">1 / 90</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Day01 进度</p>
+        <p class="metric-value" id="day01Metric">0 / 22</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>课程列表</h2>
+        <p class="note">后续 Day02-Day90 会按同一结构加入。</p>
+      </div>
+
+      <div class="day-grid">
+        <article class="day-card">
+          <div class="day-top">
+            <span class="day-number">Day 01</span>
+            <span class="badge" id="day01Badge">进行中</span>
+          </div>
+          <p class="day-title">Tiny Habits, Big Changes</p>
+          <p class="day-meta">完整段落 · 22 句精听 · 慢速/正常播放 · Shadowing</p>
+          <div class="progress" aria-label="Day01 学习进度">
+            <div class="progress-bar" id="day01Bar"></div>
+          </div>
+          <p class="note" id="day01Text">0 / 22 句已完成</p>
+          <div class="actions">
+            <a class="btn primary" href="day01.html">打开课程</a>
+            <button class="btn" id="resetDay01">重置进度</button>
+          </div>
+        </article>
+
+        <article class="day-card locked-card">
+          <div class="day-top">
+            <span class="day-number">Day 02</span>
+            <span class="badge locked">待加入</span>
+          </div>
+          <p class="day-title">Coming Next</p>
+          <p class="day-meta">下一课会沿用相同播放、跟读和保存方式。</p>
+          <div class="progress" aria-hidden="true">
+            <div class="progress-bar" style="width: 0%;"></div>
+          </div>
+          <p class="note">准备好后，把 Day02 加入 English OS。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>学习方式</h2>
+      </div>
+      <p class="note">先听完整段落，再进入逐句卡片。每句先慢速听清，再正常语速跟读，最后标记完成。进度只保存在当前浏览器里。</p>
+    </section>
+  </div>
+
+  <script>
+    const TOTAL_DAY01 = 22;
+    const STORAGE_KEY = "english-os-day1-completed";
+
+    function readProgress() {
+      try {
+        const completed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(completed) ? completed.length : 0;
+      } catch {
+        return 0;
+      }
+    }
+
+    function render() {
+      const done = readProgress();
+      const percent = Math.round((done / TOTAL_DAY01) * 100);
+      document.getElementById("day01Metric").textContent = `${done} / ${TOTAL_DAY01}`;
+      document.getElementById("day01Text").textContent = `${done} / ${TOTAL_DAY01} 句已完成`;
+      document.getElementById("day01Bar").style.width = `${percent}%`;
+      document.getElementById("day01Badge").textContent = done >= TOTAL_DAY01 ? "已完成" : "进行中";
+    }
+
+    document.getElementById("resetDay01").addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
