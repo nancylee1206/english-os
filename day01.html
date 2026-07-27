@@ -429,15 +429,15 @@
       <div class="control-group">
         <div class="field">
           <label>Audio</label>
-          <p class="hint">v0.2 使用固定 M4A 音频，手机和电脑播放同一份声音。</p>
+          <p class="hint">v0.3 使用固定 M4A 音频，并新增 Teaching Rhythm 和 Shadowing 留白版。</p>
         </div>
         <div class="field">
-          <label>慢速</label>
-          <p class="hint">约 112 WPM，适合精听。</p>
+          <label>节奏版</label>
+          <p class="hint">按意群停顿，适合精听。</p>
         </div>
         <div class="field">
-          <label>正常</label>
-          <p class="hint">约 150 WPM，适合跟读。</p>
+          <label>Shadowing</label>
+          <p class="hint">读一句后留白，适合开口跟读。</p>
         </div>
       </div>
 
@@ -446,7 +446,7 @@
       </div>
       <p class="hint"><span id="doneCount">0</span> / <span id="totalCount">0</span> 句已标记完成</p>
 
-      <div class="status" id="status">选择一句，点击慢速或正常播放。当前版本播放固定 M4A 音频，不再使用手机浏览器朗读。</div>
+      <div class="status" id="status">选择一句，点击正常、慢速、节奏或 Shadowing。当前版本播放固定 M4A 音频。</div>
     </aside>
 
     <main>
@@ -465,6 +465,8 @@
           <h2>完整段落</h2>
           <div class="toolbar">
             <button class="btn" id="repeatArticle">↻ 循环全文</button>
+            <button class="btn" id="playArticleRhythm">◌ 全文节奏</button>
+            <button class="btn" id="playArticleShadow">🎤 全文跟读</button>
           </div>
         </div>
         <div class="section-body article" id="articleText"></div>
@@ -759,7 +761,10 @@
           <div class="sentence-actions">
             <button class="btn primary" data-action="slow">◌ 慢速</button>
             <button class="btn" data-action="normal">▶ 正常</button>
+            <button class="btn" data-action="rhythm">◌ 节奏</button>
+            <button class="btn" data-action="shadow">🎤 跟读</button>
             <button class="btn" data-action="repeat-slow">↻ 慢速循环</button>
+            <button class="btn" data-action="repeat-rhythm">↻ 节奏循环</button>
             <button class="btn" data-action="repeat-normal">↻ 正常循环</button>
             <button class="btn icon" data-action="stop" title="停止">■</button>
           </div>
@@ -819,7 +824,13 @@
 
     function playSentence(index, speed, repeat = false) {
       setActive(index);
-      const label = speed === "slow" ? "慢速" : "正常";
+      const labels = {
+        slow: "慢速",
+        normal: "正常",
+        rhythm: "节奏",
+        shadow: "跟读"
+      };
+      const label = labels[speed] || speed;
       const id = String(index + 1).padStart(2, "0");
       playAudio(`audio/day01/s${id}-${speed}.m4a`, `Sentence ${index + 1} ${label}`, repeat);
     }
@@ -832,7 +843,13 @@
     }
 
     function playArticle(speed, repeat = false) {
-      const label = speed === "slow" ? "全文慢速" : "全文正常";
+      const labels = {
+        slow: "全文慢速",
+        normal: "全文正常",
+        rhythm: "全文节奏",
+        shadow: "全文跟读"
+      };
+      const label = labels[speed] || speed;
       playAudio(`audio/day01/full-${speed}.m4a`, label, repeat);
     }
 
@@ -850,6 +867,8 @@
     renderVocabulary();
     document.getElementById("playArticle").addEventListener("click", () => playArticle("normal"));
     document.getElementById("playArticleSlow").addEventListener("click", () => playArticle("slow"));
+    document.getElementById("playArticleRhythm").addEventListener("click", () => playArticle("rhythm"));
+    document.getElementById("playArticleShadow").addEventListener("click", () => playArticle("shadow"));
     document.getElementById("repeatArticle").addEventListener("click", () => playArticle("normal", true));
     document.getElementById("stopAll").addEventListener("click", stopSpeech);
 
@@ -862,7 +881,10 @@
 
       if (action === "slow") playSentence(index, "slow");
       if (action === "normal") playSentence(index, "normal");
+      if (action === "rhythm") playSentence(index, "rhythm");
+      if (action === "shadow") playSentence(index, "shadow");
       if (action === "repeat-slow") playSentence(index, "slow", true);
+      if (action === "repeat-rhythm") playSentence(index, "rhythm", true);
       if (action === "repeat-normal") playSentence(index, "normal", true);
       if (action === "stop") stopSpeech();
       if (action === "done") {
