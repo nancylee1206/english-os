@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>English OS Day 2 - Grammar and Recommendations</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #1c2430;
+      --muted: #647083;
+      --line: #d9e0ea;
+      --accent: #1769e0;
+      --accent-strong: #0f4fb3;
+      --good: #178a57;
+      --soft: #eaf2ff;
+      --shadow: 0 14px 36px rgba(28, 36, 48, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    button, select, input {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+    }
+
+    aside {
+      border-right: 1px solid var(--line);
+      background: #ffffff;
+      padding: 24px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    main {
+      padding: 28px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-body {
+      padding: 20px;
+    }
+
+    .article {
+      max-width: 920px;
+      font-size: 18px;
+    }
+
+    .article p + p {
+      margin-top: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: #aebbd0;
+      background: #f9fbff;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-strong);
+    }
+
+    .btn.good {
+      background: #edf9f3;
+      border-color: #b9e6cf;
+      color: #0f6a41;
+    }
+
+    .btn.icon {
+      width: 38px;
+      padding: 0;
+      font-size: 18px;
+    }
+
+    .control-group {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    .status {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      background: var(--soft);
+      color: #174a8d;
+      font-size: 14px;
+      min-height: 46px;
+    }
+
+    .sentence-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .sentence-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .sentence-card.active {
+      border-color: #79aef8;
+      box-shadow: 0 0 0 3px rgba(23, 105, 224, 0.12);
+    }
+
+    .vocab-card.active {
+      border-color: #79aef8;
+      box-shadow: 0 0 0 3px rgba(23, 105, 224, 0.12);
+    }
+
+    .sentence-top {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #fbfcff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sentence-id {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .sentence-text {
+      padding: 18px 16px 12px;
+      font-size: 22px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .chunk {
+      padding: 0 16px 14px;
+      color: #425066;
+      font-size: 15px;
+    }
+
+    .chunk span {
+      display: inline-block;
+      margin: 2px 6px 2px 0;
+      padding: 3px 8px;
+      border: 1px solid #cbd6e5;
+      border-radius: 999px;
+      background: #f7faff;
+    }
+
+    .sentence-actions {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .note {
+      padding: 0 16px 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .coach-notes {
+      padding: 0 16px 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .coach-box {
+      border: 1px solid #d8e2ef;
+      background: #fbfdff;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .coach-box strong {
+      display: block;
+      font-size: 13px;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+
+    .coach-box p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+      background: #e3e9f2;
+      overflow: hidden;
+      margin-top: 18px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--good);
+      transition: width 180ms ease;
+    }
+
+    .small-title {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .practice {
+      display: grid;
+      gap: 12px;
+    }
+
+    .practice-item {
+      border-left: 3px solid var(--accent);
+      padding-left: 12px;
+      color: #334155;
+    }
+
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .vocab-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      display: grid;
+      gap: 8px;
+    }
+
+    .vocab-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .vocab-word {
+      font-size: 18px;
+      font-weight: 750;
+    }
+
+    .ipa {
+      color: #1769e0;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .vocab-note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .vocab-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .vocab-actions .btn {
+      min-height: 34px;
+      padding: 6px 9px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .app {
+        display: block;
+      }
+
+      aside {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      main {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .sentence-text {
+        font-size: 19px;
+      }
+
+      .coach-notes {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>English OS</h1>
+      <p class="subtitle">Day 2 · Grammar and Recommendations</p>
+      <div class="toolbar">
+        <a class="btn" href="index.html">← 首页</a>
+        <button class="btn primary" id="playArticle">▶ VOA 原声</button>
+        <button class="btn icon" id="stopAll" title="停止朗读">■</button>
+      </div>
+      <div class="control-group">
+        <div class="field"><label>Source</label><p class="hint">VOA Learning English · Everyday Grammar</p></div>
+        <div class="field"><label>正常</label><p class="hint">VOA 原声和逐句正常音频，适合反复精听。</p></div>
+        <div class="field"><label>Shadowing</label><p class="hint">读一句后留白，适合开口跟读。</p></div>
+      </div>
+      <div class="progress" aria-label="学习进度"><div class="progress-bar" id="progressBar"></div></div>
+      <p class="hint"><span id="doneCount">0</span> / <span id="totalCount">0</span> 句已标记完成</p>
+      <div class="status" id="status">Day02 使用 VOA 原声音频和固定 M4A 教学音频。</div>
+    </aside>
+    <main>
+      <section class="section">
+        <div class="section-header"><h2>来源与学习目标</h2><p class="hint">Public domain · VOA Learning English</p></div>
+        <div class="section-body practice">
+          <p class="practice-item">今天重点练：如何询问和给出推荐，比如 Which restaurant do you recommend? / I recommend ... because ...</p>
+          <p class="practice-item">来源：<a href="https://learningenglish.voanews.com/a/grammar-and-recommendations-/7155122.html" target="_blank" rel="noopener">VOA Learning English · Everyday Grammar</a>。VOA Learning English materials are public domain. Source credited in this lesson.</p>
+        </div>
+      </section>
+      <section class="section">
+        <div class="section-header"><h2>重点词汇与音标</h2><p class="hint">先听关键词，再听全文。</p></div>
+        <div class="section-body"><div class="vocab-grid" id="vocabGrid"></div></div>
+      </section>
+      <section class="section">
+        <div class="section-header">
+          <h2>完整段落</h2>
+          <div class="toolbar">
+            <button class="btn" id="repeatArticle">↻ 循环原声</button>
+            <button class="btn" id="playArticleShadow">🎤 全文跟读</button>
+          </div>
+        </div>
+        <div class="section-body article" id="articleText"></div>
+      </section>
+      <section class="section">
+        <div class="section-header"><h2>逐句精听</h2><p class="hint">推荐顺序：原声/正常 → Shadowing 跟读。</p></div>
+        <div class="section-body"><div class="sentence-list" id="sentenceList"></div></div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const lesson = {
+      "title": "Grammar and Recommendations",
+      "paragraphs": [
+            "Imagine you want to give or ask for a recommendation. This recommendation could be for a restaurant, a clothing store, a hotel, or an activity. How would you do it?",
+            "In this Everyday Grammar, you will learn about a point of connection between grammar and recommendations. You will also get a chance to practice with what you learn.",
+            "Why are recommendations important? Let's start by exploring why recommendations are important. In everyday life, we often help others by sharing information with them. Other people also share information with us.",
+            "These helpful pieces of information sometimes take the form of recommendations, suggestions about what should be done or chosen. It is also worth noting that English speaking tests often include recommendations. You should always be prepared to give a recommendation and explain the reason for your recommendation.",
+            "So, how do we ask for recommendations? A few question words are especially useful for recommendations: which, where, what. But for today's lesson, let's explore only the question word which.",
+            "We use the question word which when we have several choices. When we use which, we are asking for one choice among many.",
+            "Let's explore an example. Imagine you are on a street that has many restaurants. You might ask a friend: Which restaurant do you recommend?",
+            "The general structure is: Which plus noun plus do plus subject plus main verb. Once we are in the restaurant, we might ask the server about the dishes on the menu. You might ask: Which dish do you recommend?",
+            "How do we respond to a question for a recommendation? For example, if a person asked you: Which restaurant do you recommend? The simplest answer would be this: I recommend SushiMaster.",
+            "You might also answer in a more complex way: If you like sushi, you should go to SushiMaster. The general structure is: If you blank, you should blank.",
+            "This structure involves an if-clause and a second clause that involves the modal should.",
+            "After making a recommendation, you should be prepared to explain why you recommend something. You can use the word because, as in: I recommend SushiMaster because it has the freshest fish of any restaurant in the city.",
+            "Or: I recommend SushiMaster because it has the best sushi chef in the city. You could also give an explanation without because. It might go something like this: I recommend SushiMaster. It has the best sushi chef in the city.",
+            "Now let's take some time to work with these ideas. Imagine you are staying at a hotel in an unfamiliar city. You would like to ask for a recommendation for a good bakery. How would you do so?",
+            "Here is one answer: Which bakery do you recommend? Now imagine that you want to recommend that your friend visit a park in your city. How might you explain your recommendation?",
+            "Here is one answer: I recommend Midtown Park because it has the largest, most beautiful trees in the city.",
+            "Today, we explored a few ways to talk about recommendations. In future lessons, we will explore recommendations in more detail, as well as many other fun, useful topics that connect with grammar."
+      ],
+      "sentences": [
+            {
+                  "text": "Imagine you want to give or ask for a recommendation.",
+                  "chunks": [
+                        "Imagine",
+                        "you want to give",
+                        "or ask for",
+                        "a recommendation"
+                  ],
+                  "focus": "recommendation 结尾较长，听整体节奏即可。",
+                  "speaking": "Imagine 起句轻一点，recommendation 是句尾落点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "This recommendation could be for a restaurant, a clothing store, a hotel, or an activity.",
+                  "chunks": [
+                        "This recommendation",
+                        "could be for a restaurant",
+                        "a clothing store",
+                        "a hotel",
+                        "or an activity"
+                  ],
+                  "focus": "could be 会弱读；后面是一串选项，抓 restaurant / store / hotel / activity。",
+                  "speaking": "列举时每个选项轻停，activity 重音在 TIV。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "How would you do it?",
+                  "chunks": [
+                        "How would you",
+                        "do it"
+                  ],
+                  "focus": "would you 常连读，听起来像 wouldja。",
+                  "speaking": "How 稍重，do it 连起来，不要逐词断开。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "In this Everyday Grammar, you will learn about a point of connection between grammar and recommendations.",
+                  "chunks": [
+                        "In this Everyday Grammar",
+                        "you will learn about",
+                        "a point of connection",
+                        "between grammar and recommendations"
+                  ],
+                  "focus": "connection between 容易粘连；recommendations 只需抓主重音。",
+                  "speaking": "长句分四块读，connection 和 recommendations 是关键。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You will also get a chance to practice with what you learn.",
+                  "chunks": [
+                        "You will also",
+                        "get a chance",
+                        "to practice",
+                        "with what you learn"
+                  ],
+                  "focus": "get a chance 中 get a 连读；practice 重音在 PRAC。",
+                  "speaking": "chance 后轻停，practice 清楚有力。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Why are recommendations important?",
+                  "chunks": [
+                        "Why are",
+                        "recommendations important"
+                  ],
+                  "focus": "Why are 会连得很短；重点在 important。",
+                  "speaking": "问句结尾可以自然上扬一点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Let's start by exploring why recommendations are important.",
+                  "chunks": [
+                        "Let's start",
+                        "by exploring",
+                        "why recommendations",
+                        "are important"
+                  ],
+                  "focus": "start by 连读；exploring 的 /r/ 要听整体。",
+                  "speaking": "start by 一口气读，important 落稳。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "In everyday life, we often help others by sharing information with them.",
+                  "chunks": [
+                        "In everyday life",
+                        "we often help others",
+                        "by sharing information",
+                        "with them"
+                  ],
+                  "focus": "help others 中 p 可能弱；sharing information 是核心信息。",
+                  "speaking": "everyday life 后停顿，information 重音在 MA。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Other people also share information with us.",
+                  "chunks": [
+                        "Other people",
+                        "also share information",
+                        "with us"
+                  ],
+                  "focus": "with us 会连成 with-us；also 不要听丢。",
+                  "speaking": "share information 连贯读，with us 轻收。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "These helpful pieces of information sometimes take the form of recommendations.",
+                  "chunks": [
+                        "These helpful pieces",
+                        "of information",
+                        "sometimes take the form",
+                        "of recommendations"
+                  ],
+                  "focus": "pieces of 会连读；take the form 是一个整体。",
+                  "speaking": "helpful pieces 别读平，recommendations 句尾落点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Recommendations are suggestions about what should be done or chosen.",
+                  "chunks": [
+                        "Recommendations are suggestions",
+                        "about what should be done",
+                        "or chosen"
+                  ],
+                  "focus": "should be 弱读；done or chosen 中 or 很轻。",
+                  "speaking": "suggestions 和 chosen 清楚，should be 不用读太重。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "It is also worth noting that English speaking tests often include recommendations.",
+                  "chunks": [
+                        "It is also worth noting",
+                        "that English speaking tests",
+                        "often include recommendations"
+                  ],
+                  "focus": "worth noting 连在一起；include recommendations 是重点。",
+                  "speaking": "worth noting 读成一块，include 重音在 CLUDE。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You should always be prepared to give a recommendation and explain the reason for your recommendation.",
+                  "chunks": [
+                        "You should always be prepared",
+                        "to give a recommendation",
+                        "and explain the reason",
+                        "for your recommendation"
+                  ],
+                  "focus": "prepared to 中 to 弱读；explain the reason 连贯听。",
+                  "speaking": "prepared / recommendation / explain 是三个支点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "So, how do we ask for recommendations?",
+                  "chunks": [
+                        "So",
+                        "how do we ask",
+                        "for recommendations"
+                  ],
+                  "focus": "how do we 可连得很快。",
+                  "speaking": "So 后轻停，ask 稍微咬清。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "A few question words are especially useful for recommendations: which, where, what.",
+                  "chunks": [
+                        "A few question words",
+                        "are especially useful",
+                        "for recommendations",
+                        "which, where, what"
+                  ],
+                  "focus": "especially useful 是难点；后面三个疑问词要抓住。",
+                  "speaking": "especially 重音在 PEC，which / where / what 分开读。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "But for today's lesson, let's explore only the question word which.",
+                  "chunks": [
+                        "But for today's lesson",
+                        "let's explore only",
+                        "the question word which"
+                  ],
+                  "focus": "today's lesson 和 question word 是重点块。",
+                  "speaking": "which 句尾要清楚，不要吞掉。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "We use the question word which when we have several choices.",
+                  "chunks": [
+                        "We use the question word which",
+                        "when we have",
+                        "several choices"
+                  ],
+                  "focus": "several 不要听成 seven；choices 结尾轻。",
+                  "speaking": "which 后轻停，several choices 是落点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "When we use which, we are asking for one choice among many.",
+                  "chunks": [
+                        "When we use which",
+                        "we are asking for one choice",
+                        "among many"
+                  ],
+                  "focus": "asking for 会连读；among many 是句尾核心。",
+                  "speaking": "choice 和 many 读清楚，among 重音在 MONG。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Let's explore an example.",
+                  "chunks": [
+                        "Let's explore",
+                        "an example"
+                  ],
+                  "focus": "explore an 连读。",
+                  "speaking": "example 重音在 ZAM。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Imagine you are on a street that has many restaurants.",
+                  "chunks": [
+                        "Imagine you are",
+                        "on a street",
+                        "that has many restaurants"
+                  ],
+                  "focus": "you are 可弱读；restaurants 结尾不要拖。",
+                  "speaking": "street 和 restaurants 是画面词，读得清楚。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You might ask a friend: Which restaurant do you recommend?",
+                  "chunks": [
+                        "You might ask a friend",
+                        "Which restaurant",
+                        "do you recommend"
+                  ],
+                  "focus": "might ask 连读；which restaurant 是重点。",
+                  "speaking": "recommend 末尾不要加多余音。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "The general structure is: Which plus noun plus do plus subject plus main verb.",
+                  "chunks": [
+                        "The general structure is",
+                        "Which plus noun",
+                        "plus do",
+                        "plus subject",
+                        "plus main verb"
+                  ],
+                  "focus": "这是结构说明，抓 plus 的节奏。",
+                  "speaking": "每个 plus 后轻停，main verb 读稳。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Once we are in the restaurant, we might ask the server about the dishes on the menu.",
+                  "chunks": [
+                        "Once we are in the restaurant",
+                        "we might ask the server",
+                        "about the dishes",
+                        "on the menu"
+                  ],
+                  "focus": "once we are 和 might ask 都容易连读。",
+                  "speaking": "restaurant / server / dishes / menu 是四个重点词。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You might ask: Which dish do you recommend?",
+                  "chunks": [
+                        "You might ask",
+                        "Which dish",
+                        "do you recommend"
+                  ],
+                  "focus": "which dish 里的 ch/d 衔接要听清。",
+                  "speaking": "dish 和 recommend 要清楚。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "How do we respond to a question for a recommendation?",
+                  "chunks": [
+                        "How do we respond",
+                        "to a question",
+                        "for a recommendation"
+                  ],
+                  "focus": "respond to 连读；recommendation 句尾较长。",
+                  "speaking": "respond 重音在 SPOND。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "For example, if a person asked you: Which restaurant do you recommend?",
+                  "chunks": [
+                        "For example",
+                        "if a person asked you",
+                        "Which restaurant",
+                        "do you recommend"
+                  ],
+                  "focus": "asked you 可能听起来像 ask-you。",
+                  "speaking": "For example 后停顿，restaurant 是核心。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "The simplest answer would be this: I recommend SushiMaster.",
+                  "chunks": [
+                        "The simplest answer",
+                        "would be this",
+                        "I recommend SushiMaster"
+                  ],
+                  "focus": "would be this 弱读；SushiMaster 是专名，听轮廓即可。",
+                  "speaking": "simplest answer 和 recommend 是支点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You might also answer in a more complex way.",
+                  "chunks": [
+                        "You might also answer",
+                        "in a more complex way"
+                  ],
+                  "focus": "might also 会贴在一起；complex 重音在 COM。",
+                  "speaking": "complex way 读成一个整体。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "If you like sushi, you should go to SushiMaster.",
+                  "chunks": [
+                        "If you like sushi",
+                        "you should go",
+                        "to SushiMaster"
+                  ],
+                  "focus": "should 弱读；go to 连读。",
+                  "speaking": "If 从句后轻停，should go 是建议动作。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "The general structure is: If you blank, you should blank.",
+                  "chunks": [
+                        "The general structure is",
+                        "If you blank",
+                        "you should blank"
+                  ],
+                  "focus": "blank 前后的停顿很明显。",
+                  "speaking": "结构句要读得清楚，像老师示范。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "This structure involves an if-clause and a second clause that involves the modal should.",
+                  "chunks": [
+                        "This structure involves",
+                        "an if-clause",
+                        "and a second clause",
+                        "that involves the modal should"
+                  ],
+                  "focus": "involves an 连读；if-clause / second clause 是术语。",
+                  "speaking": "clause 读清楚，modal should 轻收。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "After making a recommendation, you should be prepared to explain why you recommend something.",
+                  "chunks": [
+                        "After making a recommendation",
+                        "you should be prepared",
+                        "to explain why",
+                        "you recommend something"
+                  ],
+                  "focus": "prepared to 弱读；explain why 连得自然。",
+                  "speaking": "recommendation 后停顿，explain why 是核心。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You can use the word because.",
+                  "chunks": [
+                        "You can use",
+                        "the word because"
+                  ],
+                  "focus": "can 弱读；because 重音在 CAUSE。",
+                  "speaking": "because 读清楚，为后面解释做准备。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "I recommend SushiMaster because it has the freshest fish of any restaurant in the city.",
+                  "chunks": [
+                        "I recommend SushiMaster",
+                        "because it has",
+                        "the freshest fish",
+                        "of any restaurant",
+                        "in the city"
+                  ],
+                  "focus": "freshest fish 中 sh/f 容易糊；because it 连读。",
+                  "speaking": "freshest fish 是重音核心，city 轻收。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "I recommend SushiMaster because it has the best sushi chef in the city.",
+                  "chunks": [
+                        "I recommend SushiMaster",
+                        "because it has",
+                        "the best sushi chef",
+                        "in the city"
+                  ],
+                  "focus": "best sushi chef 连续辅音较多。",
+                  "speaking": "best / chef / city 三个点读清楚。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You could also give an explanation without because.",
+                  "chunks": [
+                        "You could also give",
+                        "an explanation",
+                        "without because"
+                  ],
+                  "focus": "could also 弱读；without because 是核心。",
+                  "speaking": "explanation 重音在 NA。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "It might go something like this: I recommend SushiMaster. It has the best sushi chef in the city.",
+                  "chunks": [
+                        "It might go something like this",
+                        "I recommend SushiMaster",
+                        "It has the best sushi chef",
+                        "in the city"
+                  ],
+                  "focus": "something like this 是一整块；后面是示范句。",
+                  "speaking": "示范句之间停顿明显。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Now let's take some time to work with these ideas.",
+                  "chunks": [
+                        "Now let's take some time",
+                        "to work with",
+                        "these ideas"
+                  ],
+                  "focus": "take some time 和 work with 都是连读块。",
+                  "speaking": "ideas 句尾自然上扬一点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Imagine you are staying at a hotel in an unfamiliar city.",
+                  "chunks": [
+                        "Imagine you are staying",
+                        "at a hotel",
+                        "in an unfamiliar city"
+                  ],
+                  "focus": "staying at a 连读；unfamiliar 较长，抓主重音。",
+                  "speaking": "hotel / unfamiliar city 是画面重点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "You would like to ask for a recommendation for a good bakery.",
+                  "chunks": [
+                        "You would like to ask",
+                        "for a recommendation",
+                        "for a good bakery"
+                  ],
+                  "focus": "would like to 弱读；bakery 重音在 BAKE。",
+                  "speaking": "recommendation 和 bakery 是落点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "How would you do so?",
+                  "chunks": [
+                        "How would you",
+                        "do so"
+                  ],
+                  "focus": "would you 连读。",
+                  "speaking": "do so 轻收，不要拖长。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Here is one answer: Which bakery do you recommend?",
+                  "chunks": [
+                        "Here is one answer",
+                        "Which bakery",
+                        "do you recommend"
+                  ],
+                  "focus": "Here is 可连读；bakery 要听清。",
+                  "speaking": "answer 后停顿，Which bakery 是核心。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Now imagine that you want to recommend that your friend visit a park in your city.",
+                  "chunks": [
+                        "Now imagine that",
+                        "you want to recommend",
+                        "that your friend visit",
+                        "a park in your city"
+                  ],
+                  "focus": "recommend that 和 friend visit 是难点。",
+                  "speaking": "recommend / friend / park / city 是支点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "How might you explain your recommendation?",
+                  "chunks": [
+                        "How might you explain",
+                        "your recommendation"
+                  ],
+                  "focus": "might you 连读；explain 重音在 PLAIN。",
+                  "speaking": "recommendation 句尾不要赶。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Here is one answer: I recommend Midtown Park because it has the largest, most beautiful trees in the city.",
+                  "chunks": [
+                        "Here is one answer",
+                        "I recommend Midtown Park",
+                        "because it has the largest",
+                        "most beautiful trees",
+                        "in the city"
+                  ],
+                  "focus": "largest / most beautiful trees 是信息密集处。",
+                  "speaking": "Midtown Park 稍停，beautiful trees 读得有画面感。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "Today, we explored a few ways to talk about recommendations.",
+                  "chunks": [
+                        "Today",
+                        "we explored a few ways",
+                        "to talk about recommendations"
+                  ],
+                  "focus": "explored a 会连读；recommendations 句尾长。",
+                  "speaking": "Today 后停顿，ways 和 recommendations 是重点。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "In future lessons, we will explore recommendations in more detail.",
+                  "chunks": [
+                        "In future lessons",
+                        "we will explore recommendations",
+                        "in more detail"
+                  ],
+                  "focus": "future lessons 连贯听；more detail 是落点。",
+                  "speaking": "detail 重音在 TAIL。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            },
+            {
+                  "text": "We will also explore many other fun, useful topics that connect with grammar.",
+                  "chunks": [
+                        "We will also explore",
+                        "many other fun, useful topics",
+                        "that connect with grammar"
+                  ],
+                  "focus": "fun useful topics 是列举块；connect with 连读。",
+                  "speaking": "fun / useful / topics 分明但不拖。",
+                  "check": "先听正常版抓真实语速，再用跟读版开口模仿。"
+            }
+      ],
+      "vocabulary": [
+            {
+                  "word": "recommendation",
+                  "ipa": "/ˌrekəmenˈdeɪʃən/",
+                  "note": "重音在 DAY；结尾轻。"
+            },
+            {
+                  "word": "recommend",
+                  "ipa": "/ˌrekəˈmend/",
+                  "note": "重音在 MEND。"
+            },
+            {
+                  "word": "suggestion",
+                  "ipa": "/səˈdʒestʃən/",
+                  "note": "重音在 GES。"
+            },
+            {
+                  "word": "structure",
+                  "ipa": "/ˈstrʌktʃər/",
+                  "note": "STRUC 重，结尾轻。"
+            },
+            {
+                  "word": "choice",
+                  "ipa": "/tʃɔɪs/",
+                  "note": "收尾 /s/ 要清楚。"
+            },
+            {
+                  "word": "clause",
+                  "ipa": "/klɔːz/",
+                  "note": "结尾 /z/，不是 /s/。"
+            },
+            {
+                  "word": "modal",
+                  "ipa": "/ˈmoʊdl/",
+                  "note": "MO 重，第二拍轻。"
+            },
+            {
+                  "word": "because",
+                  "ipa": "/bɪˈkɔːz/",
+                  "note": "重音在 CAUSE。"
+            },
+            {
+                  "word": "bakery",
+                  "ipa": "/ˈbeɪkəri/",
+                  "note": "BAKE 重。"
+            },
+            {
+                  "word": "unfamiliar",
+                  "ipa": "/ˌʌnfəˈmɪliər/",
+                  "note": "重音在 MIL。"
+            }
+      ]
+};
+    const storageKey = "english-os-day2-completed";
+    const audioBase = "audio/day02";
+    const originalFullAudio = "full-voa-original.mp3";
+    const state = {
+      activeIndex: null,
+      repeatTimer: null,
+      completed: new Set(JSON.parse(localStorage.getItem(storageKey) || "[]")),
+      audio: new Audio()
+    };
+    const articleText = document.getElementById("articleText");
+    const sentenceList = document.getElementById("sentenceList");
+    const vocabGrid = document.getElementById("vocabGrid");
+    const statusEl = document.getElementById("status");
+    const progressBar = document.getElementById("progressBar");
+    const doneCount = document.getElementById("doneCount");
+    const totalCount = document.getElementById("totalCount");
+    function setStatus(message) { statusEl.textContent = message; }
+    function playAudio(src, label, repeat = false) {
+      clearTimeout(state.repeatTimer);
+      state.audio.pause();
+      state.audio.currentTime = 0;
+      state.audio = new Audio(src);
+      state.audio.loop = repeat;
+      state.audio.onplay = () => setStatus(label + " 播放中...");
+      state.audio.onended = () => setStatus(label + " 播放结束。");
+      state.audio.onerror = () => setStatus("无法播放 " + label + "。请确认 audio/day02 音频文件已上传。");
+      state.audio.play().catch(() => setStatus("浏览器阻止了自动播放，请再次点击播放按钮。"));
+    }
+    function stopSpeech() {
+      clearTimeout(state.repeatTimer);
+      state.audio.pause();
+      state.audio.currentTime = 0;
+      document.querySelectorAll(".sentence-card").forEach((card) => card.classList.remove("active"));
+      document.querySelectorAll(".vocab-card").forEach((card) => card.classList.remove("active"));
+      setStatus("已停止播放。");
+    }
+    function renderArticle() { articleText.innerHTML = lesson.paragraphs.map((p) => "<p>" + p + "</p>").join(""); }
+    function renderSentences() {
+      sentenceList.innerHTML = "";
+      lesson.sentences.forEach((sentence, index) => {
+        const card = document.createElement("article");
+        card.className = "sentence-card";
+        card.dataset.index = index;
+        card.innerHTML = `
+          <div class="sentence-top">
+            <span class="sentence-id">Sentence ${index + 1}</span>
+            <button class="btn ${state.completed.has(index) ? "good" : ""}" data-action="done">${state.completed.has(index) ? "✓ 已完成" : "标记完成"}</button>
+          </div>
+          <div class="sentence-text">${sentence.text}</div>
+          <div class="chunk">${sentence.chunks.map((chunk) => `<span>${chunk}</span>`).join("")}</div>
+          <div class="sentence-actions">
+            <button class="btn primary" data-action="normal">▶ 正常</button>
+            <button class="btn" data-action="shadow">🎤 跟读</button>
+            <button class="btn" data-action="repeat-normal">↻ 正常循环</button>
+            <button class="btn icon" data-action="stop" title="停止">■</button>
+          </div>
+          <div class="coach-notes">
+            <div class="coach-box"><strong>Listening</strong><p>${sentence.focus}</p></div>
+            <div class="coach-box"><strong>Speaking</strong><p>${sentence.speaking}</p></div>
+          </div>
+          <p class="note">${sentence.check}</p>
+        `;
+        sentenceList.appendChild(card);
+      });
+      updateProgress();
+    }
+    function renderVocabulary() {
+      vocabGrid.innerHTML = lesson.vocabulary.map((item, index) => `
+        <div class="vocab-card" data-index="${index}">
+          <div class="vocab-head">
+            <div><div class="vocab-word">${item.word}</div><div class="ipa">${item.ipa}</div></div>
+            <button class="btn icon" data-action="vocab-normal" title="播放单词">▶</button>
+          </div>
+          <p class="vocab-note">${item.note}</p>
+          <div class="vocab-actions">
+            <button class="btn primary" data-action="vocab-normal">▶ 正常</button>
+            <button class="btn" data-action="vocab-repeat">↻ 循环</button>
+            <button class="btn icon" data-action="vocab-stop" title="停止">■</button>
+          </div>
+        </div>
+      `).join("");
+    }
+    function setActive(index) {
+      document.querySelectorAll(".sentence-card").forEach((card) => card.classList.toggle("active", Number(card.dataset.index) === index));
+      document.querySelectorAll(".vocab-card").forEach((card) => card.classList.remove("active"));
+    }
+    function setActiveVocab(index) {
+      document.querySelectorAll(".sentence-card").forEach((card) => card.classList.remove("active"));
+      document.querySelectorAll(".vocab-card").forEach((card) => card.classList.toggle("active", Number(card.dataset.index) === index));
+    }
+    function playSentence(index, speed, repeat = false) {
+      setActive(index);
+      const labels = { normal: "正常", shadow: "跟读" };
+      const id = String(index + 1).padStart(2, "0");
+      playAudio(`${audioBase}/s${id}-${speed}.m4a`, `Sentence ${index + 1} ${labels[speed]}`, repeat);
+    }
+    function playVocabulary(index, speed, repeat = false) {
+      setActiveVocab(index);
+      const labels = { normal: "正常" };
+      const id = String(index + 1).padStart(2, "0");
+      playAudio(`${audioBase}/v${id}-${speed}.m4a`, `${lesson.vocabulary[index].word} ${labels[speed]}`, repeat);
+    }
+    function playArticle(speed, repeat = false) {
+      const files = { normal: originalFullAudio, shadow: "full-shadow.m4a" };
+      const labels = { normal: "VOA 原声", shadow: "全文跟读" };
+      playAudio(`${audioBase}/${files[speed]}`, labels[speed], repeat);
+    }
+    function updateProgress() {
+      const total = lesson.sentences.length;
+      const done = state.completed.size;
+      totalCount.textContent = total;
+      doneCount.textContent = done;
+      progressBar.style.width = Math.round((done / total) * 100) + "%";
+      localStorage.setItem(storageKey, JSON.stringify([...state.completed]));
+    }
+    renderArticle(); renderSentences(); renderVocabulary();
+    document.getElementById("playArticle").addEventListener("click", () => playArticle("normal"));
+    document.getElementById("playArticleShadow").addEventListener("click", () => playArticle("shadow"));
+    document.getElementById("repeatArticle").addEventListener("click", () => playArticle("normal", true));
+    document.getElementById("stopAll").addEventListener("click", stopSpeech);
+    sentenceList.addEventListener("click", (event) => {
+      const button = event.target.closest("button"); if (!button) return;
+      const card = event.target.closest(".sentence-card"); const index = Number(card.dataset.index); const action = button.dataset.action;
+      if (["normal", "shadow"].includes(action)) playSentence(index, action);
+      if (action === "repeat-normal") playSentence(index, "normal", true);
+      if (action === "stop") stopSpeech();
+      if (action === "done") { state.completed.has(index) ? state.completed.delete(index) : state.completed.add(index); renderSentences(); }
+    });
+    vocabGrid.addEventListener("click", (event) => {
+      const button = event.target.closest("button"); if (!button) return;
+      const card = event.target.closest(".vocab-card"); const index = Number(card.dataset.index); const action = button.dataset.action;
+      if (action === "vocab-normal") playVocabulary(index, "normal");
+      if (action === "vocab-repeat") playVocabulary(index, "normal", true);
+      if (action === "vocab-stop") stopSpeech();
+    });
+  </script>
+</body>
+</html>

@@ -422,18 +422,17 @@
       <div class="toolbar">
         <a class="btn" href="index.html">← 首页</a>
         <button class="btn primary" id="playArticle">▶ 全文正常</button>
-        <button class="btn" id="playArticleSlow">◌ 全文慢速</button>
         <button class="btn icon" id="stopAll" title="停止朗读">■</button>
       </div>
 
       <div class="control-group">
         <div class="field">
           <label>Audio</label>
-          <p class="hint">v0.3 使用固定 M4A 音频，并新增 Teaching Rhythm 和 Shadowing 留白版。</p>
+          <p class="hint">v0.5 使用固定 M4A 音频，保留正常播放和 Shadowing 留白跟读。</p>
         </div>
         <div class="field">
-          <label>节奏版</label>
-          <p class="hint">按意群停顿，适合精听。</p>
+          <label>正常</label>
+          <p class="hint">固定音频，适合反复精听。</p>
         </div>
         <div class="field">
           <label>Shadowing</label>
@@ -446,7 +445,7 @@
       </div>
       <p class="hint"><span id="doneCount">0</span> / <span id="totalCount">0</span> 句已标记完成</p>
 
-      <div class="status" id="status">选择一句，点击正常、慢速、节奏或 Shadowing。当前版本播放固定 M4A 音频。</div>
+      <div class="status" id="status">选择一句，点击正常或 Shadowing。当前版本播放固定 M4A 音频。</div>
     </aside>
 
     <main>
@@ -465,7 +464,6 @@
           <h2>完整段落</h2>
           <div class="toolbar">
             <button class="btn" id="repeatArticle">↻ 循环全文</button>
-            <button class="btn" id="playArticleRhythm">◌ 全文节奏</button>
             <button class="btn" id="playArticleShadow">🎤 全文跟读</button>
           </div>
         </div>
@@ -475,7 +473,7 @@
       <section class="section">
         <div class="section-header">
           <h2>逐句精听</h2>
-          <p class="hint">每一句都可以单独慢速、正常、循环播放。</p>
+          <p class="hint">每一句都可以单独正常播放或 Shadowing 跟读。</p>
         </div>
         <div class="section-body">
           <div class="sentence-list" id="sentenceList"></div>
@@ -489,7 +487,7 @@
         <div class="section-body practice">
           <div>
             <div class="small-title">Shadowing</div>
-            <p class="practice-item">先慢速听一句，然后只模仿重音和停顿。第二遍再正常语速跟读。</p>
+            <p class="practice-item">先正常听一句，抓重音和停顿。再用 Shadowing 版开口跟读。</p>
           </div>
           <div>
             <div class="small-title">Today</div>
@@ -759,12 +757,8 @@
           <div class="sentence-text">${sentence.text}</div>
           <div class="chunk">${sentence.chunks.map((chunk) => `<span>${chunk}</span>`).join("")}</div>
           <div class="sentence-actions">
-            <button class="btn primary" data-action="slow">◌ 慢速</button>
-            <button class="btn" data-action="normal">▶ 正常</button>
-            <button class="btn" data-action="rhythm">◌ 节奏</button>
+            <button class="btn primary" data-action="normal">▶ 正常</button>
             <button class="btn" data-action="shadow">🎤 跟读</button>
-            <button class="btn" data-action="repeat-slow">↻ 慢速循环</button>
-            <button class="btn" data-action="repeat-rhythm">↻ 节奏循环</button>
             <button class="btn" data-action="repeat-normal">↻ 正常循环</button>
             <button class="btn icon" data-action="stop" title="停止">■</button>
           </div>
@@ -797,8 +791,7 @@
           </div>
           <p class="vocab-note">${item.note}</p>
           <div class="vocab-actions">
-            <button class="btn primary" data-action="vocab-slow">◌ 慢速</button>
-            <button class="btn" data-action="vocab-normal">▶ 正常</button>
+            <button class="btn primary" data-action="vocab-normal">▶ 正常</button>
             <button class="btn" data-action="vocab-repeat">↻ 循环</button>
             <button class="btn icon" data-action="vocab-stop" title="停止">■</button>
           </div>
@@ -825,9 +818,7 @@
     function playSentence(index, speed, repeat = false) {
       setActive(index);
       const labels = {
-        slow: "慢速",
         normal: "正常",
-        rhythm: "节奏",
         shadow: "跟读"
       };
       const label = labels[speed] || speed;
@@ -837,16 +828,14 @@
 
     function playVocabulary(index, speed, repeat = false) {
       setActiveVocab(index);
-      const label = speed === "slow" ? "慢速" : "正常";
+      const label = "正常";
       const id = String(index + 1).padStart(2, "0");
       playAudio(`audio/day01/v${id}-${speed}.m4a`, `${lesson.vocabulary[index].word} ${label}`, repeat);
     }
 
     function playArticle(speed, repeat = false) {
       const labels = {
-        slow: "全文慢速",
         normal: "全文正常",
-        rhythm: "全文节奏",
         shadow: "全文跟读"
       };
       const label = labels[speed] || speed;
@@ -866,8 +855,6 @@
     renderSentences();
     renderVocabulary();
     document.getElementById("playArticle").addEventListener("click", () => playArticle("normal"));
-    document.getElementById("playArticleSlow").addEventListener("click", () => playArticle("slow"));
-    document.getElementById("playArticleRhythm").addEventListener("click", () => playArticle("rhythm"));
     document.getElementById("playArticleShadow").addEventListener("click", () => playArticle("shadow"));
     document.getElementById("repeatArticle").addEventListener("click", () => playArticle("normal", true));
     document.getElementById("stopAll").addEventListener("click", stopSpeech);
@@ -879,12 +866,8 @@
       const index = Number(card.dataset.index);
       const action = button.dataset.action;
 
-      if (action === "slow") playSentence(index, "slow");
       if (action === "normal") playSentence(index, "normal");
-      if (action === "rhythm") playSentence(index, "rhythm");
       if (action === "shadow") playSentence(index, "shadow");
-      if (action === "repeat-slow") playSentence(index, "slow", true);
-      if (action === "repeat-rhythm") playSentence(index, "rhythm", true);
       if (action === "repeat-normal") playSentence(index, "normal", true);
       if (action === "stop") stopSpeech();
       if (action === "done") {
@@ -904,9 +887,8 @@
       const index = Number(card.dataset.index);
       const action = button.dataset.action;
 
-      if (action === "vocab-slow") playVocabulary(index, "slow");
       if (action === "vocab-normal") playVocabulary(index, "normal");
-      if (action === "vocab-repeat") playVocabulary(index, "slow", true);
+      if (action === "vocab-repeat") playVocabulary(index, "normal", true);
       if (action === "vocab-stop") stopSpeech();
     });
   </script>

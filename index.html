@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>English OS v0.3</title>
+  <title>English OS v0.5</title>
   <style>
     :root {
       color-scheme: light;
@@ -68,7 +68,7 @@
 
     .summary {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 14px;
       margin-bottom: 18px;
     }
@@ -245,30 +245,34 @@
     <header>
       <div>
         <h1>English OS</h1>
-        <p class="subtitle">90 天英语精听训练系统。v0.3 新增 Teaching Rhythm Audio：按意群停顿，并提供 Shadowing 留白跟读版。</p>
+        <p class="subtitle">90 天英语精听训练系统。v0.5 已加入 Day02：VOA 原声 + Shadowing 逐句跟读。</p>
       </div>
-      <a class="btn primary" href="day01.html">继续 Day01</a>
+      <a class="btn primary" href="day02.html">继续 Day02</a>
     </header>
 
     <section class="summary" aria-label="学习概览">
       <div class="metric">
         <p class="metric-label">当前版本</p>
-        <p class="metric-value">v0.3</p>
+        <p class="metric-value">v0.5</p>
       </div>
       <div class="metric">
         <p class="metric-label">已开放课程</p>
-        <p class="metric-value">1 / 90</p>
+        <p class="metric-value">2 / 90</p>
       </div>
       <div class="metric">
         <p class="metric-label">Day01 进度</p>
         <p class="metric-value" id="day01Metric">0 / 22</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Day02 进度</p>
+        <p class="metric-value" id="day02Metric">0 / 48</p>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-head">
         <h2>课程列表</h2>
-        <p class="note">后续 Day02-Day90 会按同一结构加入。</p>
+        <p class="note">Day02 已加入，后续 Day03-Day90 会按同一结构扩展。</p>
       </div>
 
       <div class="day-grid">
@@ -278,7 +282,7 @@
             <span class="badge" id="day01Badge">进行中</span>
           </div>
           <p class="day-title">Tiny Habits, Big Changes</p>
-          <p class="day-meta">完整段落 · 22 句精听 · 正常/慢速/节奏/Shadowing 固定音频</p>
+          <p class="day-meta">完整段落 · 22 句精听 · 正常/Shadowing 固定音频</p>
           <div class="progress" aria-label="Day01 学习进度">
             <div class="progress-bar" id="day01Bar"></div>
           </div>
@@ -289,17 +293,21 @@
           </div>
         </article>
 
-        <article class="day-card locked-card">
+        <article class="day-card">
           <div class="day-top">
             <span class="day-number">Day 02</span>
-            <span class="badge locked">待加入</span>
+            <span class="badge" id="day02Badge">进行中</span>
           </div>
-          <p class="day-title">Coming Next</p>
-          <p class="day-meta">下一课会沿用相同播放、跟读和保存方式。</p>
-          <div class="progress" aria-hidden="true">
-            <div class="progress-bar" style="width: 0%;"></div>
+          <p class="day-title">Grammar and Recommendations</p>
+          <p class="day-meta">VOA 原声 · 48 句精听 · 正常/Shadowing 固定音频</p>
+          <div class="progress" aria-label="Day02 学习进度">
+            <div class="progress-bar" id="day02Bar"></div>
           </div>
-          <p class="note">准备好后，把 Day02 加入 English OS。</p>
+          <p class="note" id="day02Text">0 / 48 句已完成</p>
+          <div class="actions">
+            <a class="btn primary" href="day02.html">打开课程</a>
+            <button class="btn" id="resetDay02">重置进度</button>
+          </div>
         </article>
       </div>
     </section>
@@ -308,17 +316,19 @@
       <div class="panel-head">
         <h2>学习方式</h2>
       </div>
-      <p class="note">先听完整段落，再进入逐句卡片。推荐顺序：节奏版听清意群，Shadowing 版开口跟读，正常版检查真实语速。进度只保存在当前浏览器里。</p>
+      <p class="note">先听完整段落，再进入逐句卡片。推荐顺序：正常版反复精听，Shadowing 版开口跟读。进度只保存在当前浏览器里。</p>
     </section>
   </div>
 
   <script>
-    const TOTAL_DAY01 = 22;
-    const STORAGE_KEY = "english-os-day1-completed";
+    const lessons = [
+      { day: "day01", total: 22, storageKey: "english-os-day1-completed" },
+      { day: "day02", total: 48, storageKey: "english-os-day2-completed" }
+    ];
 
-    function readProgress() {
+    function readProgress(storageKey) {
       try {
-        const completed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        const completed = JSON.parse(localStorage.getItem(storageKey) || "[]");
         return Array.isArray(completed) ? completed.length : 0;
       } catch {
         return 0;
@@ -326,16 +336,23 @@
     }
 
     function render() {
-      const done = readProgress();
-      const percent = Math.round((done / TOTAL_DAY01) * 100);
-      document.getElementById("day01Metric").textContent = `${done} / ${TOTAL_DAY01}`;
-      document.getElementById("day01Text").textContent = `${done} / ${TOTAL_DAY01} 句已完成`;
-      document.getElementById("day01Bar").style.width = `${percent}%`;
-      document.getElementById("day01Badge").textContent = done >= TOTAL_DAY01 ? "已完成" : "进行中";
+      lessons.forEach((lesson) => {
+        const done = readProgress(lesson.storageKey);
+        const percent = Math.round((done / lesson.total) * 100);
+        document.getElementById(`${lesson.day}Metric`).textContent = `${done} / ${lesson.total}`;
+        document.getElementById(`${lesson.day}Text`).textContent = `${done} / ${lesson.total} 句已完成`;
+        document.getElementById(`${lesson.day}Bar`).style.width = `${percent}%`;
+        document.getElementById(`${lesson.day}Badge`).textContent = done >= lesson.total ? "已完成" : "进行中";
+      });
     }
 
     document.getElementById("resetDay01").addEventListener("click", () => {
-      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("english-os-day1-completed");
+      render();
+    });
+
+    document.getElementById("resetDay02").addEventListener("click", () => {
+      localStorage.removeItem("english-os-day2-completed");
       render();
     });
 
